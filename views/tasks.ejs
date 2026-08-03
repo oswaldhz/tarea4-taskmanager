@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head><title>Mis Tareas</title></head>
+<body>
+  <h1>Gestor de Tareas</h1>
+  <a href="/logout" id="btn-logout">Cerrar sesión</a>
+
+  <h2>Crear tarea</h2>
+  <form action="/tasks/create" method="POST">
+    <input type="text" name="title" id="new-title" placeholder="Título" required />
+    <input type="text" name="description" id="new-description" placeholder="Descripción" />
+    <button type="submit" id="btn-create">Crear</button>
+  </form>
+
+  <h2>Listado</h2>
+  <table id="tasks-table">
+    <% tasks.forEach(t => { %>
+    <tr id="task-row-<%= t.id %>">
+      <td><%= t.title %></td>
+      <td><%= t.description %></td>
+      <td><%= t.status %></td>
+      <td>
+        <form action="/tasks/update/<%= t.id %>" method="POST" style="display:inline">
+          <input type="text" name="title" value="<%= t.title %>" />
+          <input type="text" name="description" value="<%= t.description %>" />
+          <select name="status">
+            <option value="pendiente" <%= t.status==='pendiente'?'selected':'' %>>Pendiente</option>
+            <option value="completada" <%= t.status==='completada'?'selected':'' %>>Completada</option>
+          </select>
+          <button type="submit" class="btn-edit">Actualizar</button>
+        </form>
+        <form action="/tasks/delete/<%= t.id %>" method="POST" style="display:inline">
+          <button type="submit" class="btn-delete">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </table>
+</body>
+</html>
