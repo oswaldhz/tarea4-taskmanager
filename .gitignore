@@ -1,6 +1,6 @@
 node_modules/
 database.db
 venv/
-pages/__pycache__/login_page.cpython-314.pyc
-pages/__pycache__/tasks_page.cpython-314.pyc
-pytest.ini
+__pycache__/
+*.pyc
+.pytest_cache/

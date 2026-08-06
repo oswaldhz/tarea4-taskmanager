@@ -60,6 +60,9 @@ app.post("/tasks/create", requireLogin, (req, res) => {
 
 app.post("/tasks/update/:id", requireLogin, (req, res) => {
   const { title, description, status } = req.body;
+  if (!title || title.trim() === "" || title.length > 100) {
+    return res.redirect("/tasks?error=titulo_invalido");
+  }
   db.run(
     "UPDATE tasks SET title=?, description=?, status=? WHERE id=? AND user_id=?",
     [title, description, status, req.params.id, req.session.userId],
@@ -73,6 +76,12 @@ app.post("/tasks/delete/:id", requireLogin, (req, res) => {
     [req.params.id, req.session.userId],
     () => res.redirect("/tasks"),
   );
+});
+
+// TEST-ONLY: wipes all tasks so each Selenium test starts clean.
+// Not something you'd ship in a real production app.
+app.post("/test/reset", (req, res) => {
+  db.run("DELETE FROM tasks", () => res.sendStatus(200));
 });
 
 app.listen(3000, () => console.log("Servidor en http://localhost:3000"));

@@ -1,40 +1,59 @@
 <!DOCTYPE html>
-<html>
-<head><title>Mis Tareas</title></head>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis tareas — Gestor de Tareas</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
 <body>
-  <h1>Gestor de Tareas</h1>
-  <a href="/logout" id="btn-logout">Cerrar sesión</a>
+  <div class="page" id="app-content">
+    <div class="topbar">
+      <h1>Gestor de Tareas</h1>
+      <a href="/logout" id="btn-logout">Cerrar sesión</a>
+    </div>
 
-  <h2>Crear tarea</h2>
-  <form action="/tasks/create" method="POST">
-    <input type="text" name="title" id="new-title" placeholder="Título" required />
-    <input type="text" name="description" id="new-description" placeholder="Descripción" />
-    <button type="submit" id="btn-create">Crear</button>
-  </form>
+    <h2>Crear tarea</h2>
+    <div class="card">
+      <form action="/tasks/create" method="POST">
+        <div class="form-row">
+          <input type="text" name="title" id="new-title" placeholder="Título" required />
+          <input type="text" name="description" id="new-description" placeholder="Descripción" />
+          <button type="submit" id="btn-create">Crear</button>
+        </div>
+      </form>
+    </div>
 
-  <h2>Listado</h2>
-  <table id="tasks-table">
-    <% tasks.forEach(t => { %>
-    <tr id="task-row-<%= t.id %>">
-      <td><%= t.title %></td>
-      <td><%= t.description %></td>
-      <td><%= t.status %></td>
-      <td>
-        <form action="/tasks/update/<%= t.id %>" method="POST" style="display:inline">
-          <input type="text" name="title" value="<%= t.title %>" />
-          <input type="text" name="description" value="<%= t.description %>" />
-          <select name="status">
-            <option value="pendiente" <%= t.status==='pendiente'?'selected':'' %>>Pendiente</option>
-            <option value="completada" <%= t.status==='completada'?'selected':'' %>>Completada</option>
-          </select>
-          <button type="submit" class="btn-edit">Actualizar</button>
-        </form>
-        <form action="/tasks/delete/<%= t.id %>" method="POST" style="display:inline">
-          <button type="submit" class="btn-delete">Eliminar</button>
-        </form>
-      </td>
-    </tr>
-    <% }) %>
-  </table>
+    <h2>Listado</h2>
+    <table id="tasks-table">
+      <% if (tasks.length === 0) { %>
+      <tr>
+        <td colspan="4" class="empty-state">Todavía no tienes tareas. Crea la primera arriba.</td>
+      </tr>
+      <% } %>
+      <% tasks.forEach(t => { %>
+      <tr id="task-row-<%= t.id %>">
+        <td class="task-title-cell"><%= t.title %></td>
+        <td class="task-desc-cell"><%= t.description %></td>
+        <td><span class="status-badge status-<%= t.status %>"><%= t.status === 'completada' ? 'Completada' : 'Pendiente' %></span></td>
+        <td>
+          <div class="task-actions">
+            <form action="/tasks/update/<%= t.id %>" method="POST">
+              <input type="text" name="title" value="<%= t.title %>" />
+              <input type="text" name="description" value="<%= t.description %>" />
+              <select name="status">
+                <option value="pendiente" <%= t.status==='pendiente'?'selected':'' %>>Pendiente</option>
+                <option value="completada" <%= t.status==='completada'?'selected':'' %>>Completada</option>
+              </select>
+              <button type="submit" class="btn-edit">Actualizar</button>
+            </form>
+            <form action="/tasks/delete/<%= t.id %>" method="POST">
+              <button type="submit" class="btn-delete">Eliminar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+  </div>
 </body>
 </html>
