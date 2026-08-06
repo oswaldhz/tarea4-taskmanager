@@ -29,6 +29,19 @@ def reset_database():
 def driver():
     options = webdriver.ChromeOptions()
     # options.add_argument("--headless")  # uncomment to run without opening a window
+    # Chrome's "password leaked in a data breach" / save-password dialogs steal
+    # focus and swallow Selenium's keystrokes and clicks. Disable them.
+    options.add_argument("--incognito")
+    options.add_argument(
+        "--disable-features=PasswordManagerOnboarding,PasswordLeakDetection"
+    )
+    options.add_experimental_option(
+        "prefs",
+        {
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False,
+        },
+    )
     service = Service(ChromeDriverManager().install())
 
     # Chrome can fail to start with "session not created" under memory
